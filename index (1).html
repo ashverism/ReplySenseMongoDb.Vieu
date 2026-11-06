@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MongoDB + Sense Reply GTM Strategy Brief · Vieu · November 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:       #1A1818;
+    --ink-mid:   #3D3A3A;
+    --ink-soft:  #7A7575;
+    --rule:      #E2DFDC;
+    --paper:     #F8F6F3;
+    --white:     #FFFFFF;
+    --accent:    #7744FF;
+    --accent-lt: #EDE8FF;
+    --gold:      #B8892A;
+    --gold-lt:   #FDF5E4;
+    --red:       #C0392B;
+    --green:     #1D7A4A;
+    --green-lt:  #E6F4EC;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans:  'DM Sans', system-ui, sans-serif;
+    --max:   860px;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+  .page { max-width: var(--max); margin: 0 auto; padding: 0 40px 80px; }
+
+  /* Nav */
+  .topnav { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid var(--rule); padding: 12px 40px; display: flex; gap: 24px; flex-wrap: wrap; max-width: 100%; }
+  .topnav a { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; }
+  .topnav a:first-child, .topnav a:hover { color: var(--accent); }
+
+  /* Cover */
+  .cover { padding: 72px 0 40px; border-bottom: 1px solid var(--ink); margin-bottom: 40px; }
+  .cover-eyebrow { font-family: var(--sans); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .cover-eyebrow::before { content: ''; display: block; width: 24px; height: 1.5px; background: var(--accent); }
+  .cover-title { font-family: var(--serif); font-size: clamp(40px, 5.6vw, 60px); line-height: 1.07; color: var(--ink); margin-bottom: 10px; }
+  .cover-title em { font-style: italic; color: var(--accent); }
+  .cover-sub { font-size: 17px; color: var(--ink-mid); font-weight: 300; margin-bottom: 36px; max-width: 600px; }
+  .cover-meta { display: flex; gap: 32px; flex-wrap: wrap; }
+  .cover-meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .cover-meta-label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft); }
+  .cover-meta-value { font-size: 13px; font-weight: 500; color: var(--ink); }
+
+  /* v2 change note */
+  .v2-box { background: var(--white); border: 1px solid var(--rule); border-left: 3px solid var(--green); border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 56px; }
+  .v2-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+  .v2-list { list-style: none; font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+  .v2-list li { padding-left: 18px; position: relative; margin-bottom: 4px; }
+  .v2-list li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .v2-list li.open::before { content: '\25CB'; color: var(--gold); }
+
+  /* Sections */
+  .section { margin-bottom: 64px; scroll-margin-top: 56px; }
+  .section + .section { padding-top: 48px; border-top: 1px solid var(--rule); }
+  .section-kicker { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .section-title { font-family: var(--serif); font-size: 28px; line-height: 1.18; color: var(--ink); margin-bottom: 20px; }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .section-intro { font-size: 15px; color: var(--ink-mid); line-height: 1.7; max-width: 680px; margin-bottom: 28px; }
+
+  /* Stat strip */
+  .stat-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; margin-bottom: 40px; }
+  .stat-cell { background: var(--white); padding: 24px 22px; }
+  .stat-num { font-family: var(--serif); font-size: 34px; line-height: 1; color: var(--accent); margin-bottom: 6px; }
+  .stat-label { font-size: 12px; font-weight: 500; color: var(--ink-soft); line-height: 1.4; }
+
+  /* Pull quote */
+  .pull-quote { border-left: 3px solid var(--accent); padding: 16px 24px; background: var(--accent-lt); border-radius: 0 6px 6px 0; margin: 28px 0; }
+  .pull-quote p { font-family: var(--serif); font-size: 18px; line-height: 1.5; color: var(--ink); font-style: italic; }
+  .pull-quote cite { display: block; margin-top: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-style: normal; }
+
+  /* Cards */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .cards.three { grid-template-columns: repeat(3, 1fr); }
+  .card { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; padding: 22px 20px; }
+  .card-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .card-title { font-family: var(--serif); font-size: 17px; line-height: 1.25; margin-bottom: 10px; color: var(--ink); }
+  .card-body { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+  .card.accent-top { border-top: 3px solid var(--accent); }
+  .card.green-top { border-top: 3px solid var(--green); }
+
+  /* Two-col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+
+  /* Tags */
+  .tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .tag { font-size: 11.5px; font-weight: 500; padding: 4px 12px; border-radius: 20px; background: var(--white); border: 1px solid var(--rule); color: var(--ink-mid); }
+  .tag.tier1 { background: var(--accent); color: var(--white); border-color: var(--accent); font-weight: 600; }
+  .tag.tier2 { background: var(--accent-lt); color: var(--accent); border-color: var(--accent); }
+  .tag.anti { border-color: var(--red); color: var(--red); }
+  .tag.ask { border-style: dashed; border-color: var(--gold); color: var(--gold); background: var(--gold-lt); }
+
+  /* Segmented sub-labels */
+  .sub-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin: 18px 0 4px; }
+  .segment { background: var(--white); border: 1px solid var(--rule); border-top: 3px solid var(--accent); border-radius: 8px; padding: 22px 24px; margin-bottom: 16px; }
+  .segment-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .segment-kicker { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); background: var(--accent-lt); padding: 3px 10px; border-radius: 20px; }
+  .segment-title { font-family: var(--serif); font-size: 19px; color: var(--ink); }
+  .fast-lane { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: var(--accent-lt); border-radius: 6px; padding: 12px 16px; margin: 16px 0 4px; font-size: 13px; color: var(--ink-mid); }
+  .fast-lane b { color: var(--accent); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* Tables */
+  .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  .data-table th { text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); background: var(--ink); padding: 10px 14px; border: none; }
+  .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--rule); vertical-align: top; color: var(--ink-mid); line-height: 1.55; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: var(--white); }
+  .data-table tr:nth-child(odd) td { background: var(--paper); }
+  .data-table td strong { color: var(--ink); font-weight: 600; }
+  .ok { color: var(--green); font-weight: 600; }
+  .pend { color: var(--gold); font-weight: 600; }
+
+  /* Vieu dark box */
+  .vieu-box { background: var(--ink); border-radius: 10px; padding: 32px 36px; color: var(--white); }
+  .vieu-box-label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .vieu-box h3 { font-family: var(--serif); font-size: 22px; color: var(--white); margin-bottom: 16px; line-height: 1.3; }
+  .vieu-box > p { font-size: 13.5px; color: rgba(255,255,255,0.72); line-height: 1.7; margin-bottom: 24px; }
+
+  /* Program banner */
+  .program-banner { background: var(--ink); border-radius: 10px; padding: 28px 32px; margin-bottom: 36px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .pb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .pb-title { font-family: var(--serif); font-size: 18px; color: #fff; line-height: 1.25; margin-bottom: 6px; }
+  .pb-body { font-size: 12px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+
+  /* Pillars */
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+  .pillar { border: 1px solid rgba(255,255,255,0.18); border-radius: 6px; padding: 18px 16px; text-align: center; }
+  .pillar-text { font-size: 13.5px; font-weight: 600; color: var(--white); line-height: 1.35; }
+
+  /* Delivery matrix */
+  .del-matrix { width: 100%; border-collapse: collapse; }
+  .del-matrix th { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .del-matrix th.label-col { text-align: left; width: 60%; color: rgba(255,255,255,0.45); }
+  .del-matrix th.delivers-col { color: var(--accent); border-bottom: 2px solid var(--accent); }
+  .del-matrix td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.07); vertical-align: middle; }
+  .del-matrix tr:last-child td { border-bottom: none; }
+  .del-matrix td.label-col { padding-left: 0; }
+  .del-matrix td.icon-col  { text-align: center; width: 20%; }
+  .row-num { display: inline-block; background: rgba(119,68,255,0.35); color: var(--accent); font-size: 10px; font-weight: 700; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 4px; margin-right: 10px; flex-shrink: 0; }
+  .row-label-wrap { display: flex; align-items: flex-start; }
+  .row-label-inner { display: flex; flex-direction: column; }
+  .row-title { font-size: 13.5px; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+  .row-desc  { font-size: 11.5px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+  .mark-delivers { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; border: 1.5px solid var(--accent); background: rgba(119,68,255,0.2); }
+  .mark-delivers svg { width: 12px; height: 12px; stroke: var(--accent); stroke-width: 2.5; fill: none; }
+
+  /* Deliverable rows */
+  .del-row { display:grid; grid-template-columns:160px 1fr; border:1px solid var(--rule); border-top:none; overflow:hidden; }
+  .del-row.first { border-top:1px solid var(--rule); border-radius:8px 8px 0 0; }
+  .del-row.last { border-radius:0 0 8px 8px; }
+  .del-row .dk { background:var(--accent); padding:20px 18px; display:flex; flex-direction:column; justify-content:center; }
+  .del-row .dk .lab { font-size:9px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:6px; }
+  .del-row .dk .val { font-family:var(--serif); font-size:17px; color:#fff; line-height:1.2; }
+  .del-row .dk .when { font-size:11px; color:rgba(255,255,255,0.65); margin-top:8px; font-weight:600; }
+  .del-row .db { background:var(--white); padding:20px 22px; }
+  .del-row .db .h { font-size:13.5px; font-weight:600; color:var(--ink); margin-bottom:6px; }
+  .del-row .db .p { font-size:13px; color:var(--ink-mid); line-height:1.65; }
+
+  /* Offer box */
+  .offer-box { background: var(--white); border: 1px solid var(--rule); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 22px 24px; margin-bottom: 28px; }
+  .offer-label { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  .check-list { list-style:none; font-size:13px; color:var(--ink-mid); line-height:1.7; }
+  .check-list li { margin-bottom:6px; padding-left:18px; position:relative; }
+  .check-list li::before { content:'\2713'; position:absolute; left:0; color:var(--green); }
+  .mini-head { font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px; }
+
+  /* Agent chips */
+  .agents { display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin: 18px 0; }
+  .agent { background: var(--paper); border:1px solid var(--rule); border-radius:6px; padding:12px 12px; }
+  .agent b { display:block; font-size:12.5px; color:var(--ink); margin-bottom:2px; }
+  .agent span { font-size:11.5px; color:var(--ink-mid); line-height:1.45; display:block; }
+
+  /* Outcome strip (one-pager claims) */
+  .outcome-strip { display:grid; grid-template-columns: repeat(5, 1fr); gap:1px; background: rgba(255,255,255,0.1); border-radius:8px; overflow:hidden; margin-top: 18px; }
+  .outcome { background: var(--ink); padding: 16px 14px; }
+  .outcome .n { font-family: var(--serif); font-size: 22px; color: #B9A2FF; line-height:1.1; }
+  .outcome .l { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 4px; line-height:1.35; }
+
+  /* Governance */
+  .gov-callout { background: var(--gold-lt); border: 1px dashed var(--gold); border-radius: 8px; padding: 16px 20px; margin-bottom: 28px; font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+  .gov-callout strong { color: var(--ink); }
+  .pill { display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:2px 8px; border-radius:20px; white-space:nowrap; vertical-align: middle; }
+  .pill.live { background: var(--accent-lt); color: var(--accent); }
+  .pill.proposed { background: var(--gold-lt); color: var(--gold); border: 1px solid rgba(184,137,42,0.35); }
+  .pill.known { background: var(--green-lt); color: var(--green); }
+  .gov-table td { min-width: 120px; }
+  .gov-table td:first-child { min-width: 170px; }
+  .gov-table th:not(:first-child) { min-width: 130px; }
+  .role-name { font-weight: 600; color: var(--ink); display:block; }
+  .role-desc { font-size: 12px; color: var(--ink-soft); line-height: 1.45; display:block; margin-top: 2px; }
+  .person { color: var(--ink); font-weight: 500; }
+  .person small { display:block; font-size: 11px; color: var(--ink-soft); font-weight: 400; }
+
+  .fill { display:inline; color: var(--ink); }
+  .fill.pending { color: var(--ink-soft); font-style: italic; border-bottom: 1.5px dashed var(--accent); }
+  body.editing .fill { outline: 1px dashed var(--accent); outline-offset: 2px; background: var(--white); cursor: text; border-radius: 2px; }
+  body.editing .fill:focus { outline: 2px solid var(--accent); }
+
+  .flow { counter-reset: flow; list-style: none; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; background: var(--white); }
+  .flow li { counter-increment: flow; display: grid; grid-template-columns: 44px 1fr 190px; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--rule); align-items: start; }
+  .flow li:last-child { border-bottom: none; }
+  .flow li::before { content: counter(flow, decimal-leading-zero); font-family: var(--serif); font-size: 26px; color: var(--accent); line-height: 1; }
+  .flow li.new-step { background: var(--green-lt); }
+  .flow .ft { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+  .flow .fd { font-size: 12.5px; color: var(--ink-mid); line-height: 1.55; }
+  .flow .fo { font-size: 12px; color: var(--ink-mid); line-height: 1.5; }
+  .flow .fo b { display:block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; margin-bottom: 2px; }
+
+  .decision-list { list-style: none; border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; }
+  .decision-list li { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 14px 18px; background: var(--white); border-bottom: 1px solid var(--rule); }
+  .decision-list li:nth-child(even) { background: var(--paper); }
+  .decision-list li:last-child { border-bottom: none; }
+  .dq { font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.5; }
+  .dq span { display:block; font-size: 12px; font-weight: 400; color: var(--ink-soft); margin-top: 2px; }
+  .da { font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
+  .da b { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; margin-right: 6px; }
+
+  /* Edit toolbar (only appears with #edit in the URL) */
+  #edit-bar { position: fixed; right: 16px; bottom: 16px; z-index: 200; background: var(--ink); color: #fff; border-radius: 10px; padding: 12px 14px; box-shadow: 0 8px 28px rgba(0,0,0,0.25); font-size: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; max-width: calc(100vw - 32px); }
+  #edit-bar button { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; border: 1.5px solid var(--accent); background: var(--accent); color: #fff; border-radius: 4px; padding: 7px 12px; cursor: pointer; }
+  #edit-bar button.ghost { background: transparent; color: #B9A2FF; }
+
+  /* Footer */
+  .doc-footer { padding-top: 36px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-top: 64px; }
+  .footer-left { font-size: 12px; color: var(--ink-soft); line-height: 1.6; }
+  .footer-vieu { font-size: 22px; font-family: var(--serif); color: var(--ink-soft); }
+
+  .note { font-size: 11px; color: var(--ink-soft); line-height: 1.5; margin-top: 10px; }
+  .note a, .src a { color: var(--ink-soft); }
+  .steps { display:flex; flex-direction:column; gap:8px; }
+  .step { display:flex; gap:12px; align-items:flex-start; }
+  .step-n { flex-shrink:0; width:22px; height:22px; background:var(--accent-lt); color:var(--accent); border-radius:4px; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .step-t { font-size:13px; color:var(--ink-mid); line-height:1.55; overflow-wrap:anywhere; }
+
+  .links-box { display:flex; flex-direction:column; border:1px solid var(--rule); border-radius:8px; overflow:hidden; }
+  .link-row { display:grid; grid-template-columns:200px 1fr auto; align-items:center; padding:16px 20px; background:var(--white); border-bottom:1px solid var(--rule); gap:16px; }
+  .link-row.tall { grid-template-columns:200px 1fr; align-items:start; padding:20px; background:var(--paper); border-bottom:none; }
+  .link-name { font-size:13px; font-weight:600; color:var(--ink); }
+  .link-desc { font-size:13px; color:var(--ink-soft); }
+  .btn-outline { font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); border:1.5px solid var(--accent); border-radius:4px; padding:6px 14px; text-decoration:none; white-space:nowrap; }
+  .btn-solid { display:inline-block; margin-top:16px; font-size:11px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--accent); border-radius:4px; padding:9px 18px; text-decoration:none; }
+
+  @media print {
+    body { background: white; } .page { padding: 0 0 48px; } .cover { padding: 48px 0 32px; }
+    .topnav, #edit-bar { display: none; }
+  }
+  @media (max-width: 640px) {
+    .page { padding: 0 16px 60px; }
+    .topnav { padding: 10px 16px; gap: 14px; }
+    .cards, .cards.three, .two-col, .pillars, .program-banner { grid-template-columns: 1fr; }
+    .stat-strip { grid-template-columns: 1fr; }
+    .cover { padding: 48px 0 32px; }
+    .cover-title { font-size: 34px; }
+    .del-row, .del-row.first, .del-row.last { grid-template-columns: 1fr; }
+    .vieu-box { padding: 24px 18px; }
+    .agents { grid-template-columns: 1fr 1fr; }
+    .outcome-strip { grid-template-columns: 1fr 1fr; }
+    .flow li { grid-template-columns: 34px 1fr; }
+    .flow li .fo { grid-column: 2; }
+    .decision-list li { grid-template-columns: 1fr; gap: 6px; }
+    .link-row, .link-row.tall { grid-template-columns: 1fr; gap: 10px; }
+    .segment { padding: 18px 16px; }
+    .v2-box { padding: 18px 16px; }
+  }
+
+  /* Executive Engagement System (replaces black Vieu product section) */
+  .ees { background: var(--white); border: 1px solid var(--rule); border-radius: 12px; padding: 32px 32px 28px; background-image: linear-gradient(180deg, #FBFAFF 0%, #FFFFFF 60%); }
+  .ees-label { font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .ees-title { font-family: var(--serif); font-size: 26px; line-height: 1.2; color: var(--ink); margin-bottom: 24px; font-weight: 400; }
+  .ees-title em { font-style: normal; color: var(--accent); }
+  .ees-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; align-items: start; position: relative; }
+  .ees-left { position: relative; display: flex; flex-direction: column; gap: 14px; }
+  .ees-left::after { content: ''; position: absolute; top: 50%; right: -24px; width: 24px; border-top: 2px dotted #B9A6FF; }
+  .ees-card, .ees-panel, .ees-agent-solo { background: #fff; border: 1px solid #E2DAFF; border-radius: 12px; }
+  .ees-card { padding: 18px 18px 20px; }
+  .ees-thumb { background: linear-gradient(135deg, #EDE8FF, #D9CFFF); border-radius: 8px; overflow: hidden; }
+  .ees-thumb-graph { height: 112px; margin-bottom: 14px; }
+  .ees-step-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .ees-step-title span, .ees-agent-title span { color: var(--accent); margin-right: 4px; }
+  .ees-step-text { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+  .ees-right { display: flex; flex-direction: column; gap: 14px; }
+  .ees-panel { padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #FBFAFF; }
+  .ees-panel-title { font-size: 12px; font-weight: 700; color: var(--ink); letter-spacing: 0.02em; }
+  .ees-agent { background: #fff; border: 1px solid #E2DAFF; border-radius: 10px; padding: 10px 12px 12px; display: grid; grid-template-columns: 150px 1fr; column-gap: 14px; row-gap: 2px; align-items: center; }
+  .ees-agent .ees-thumb { grid-row: 1 / span 2; height: 56px; }
+  .ees-included { border: 2px solid var(--accent); background: var(--accent-lt); box-shadow: 0 6px 20px rgba(119,68,255,0.18); grid-template-columns: 150px 1fr; }
+  .ees-included .ees-badge { grid-row: 1; grid-column: 1 / -1; justify-self: start; margin-bottom: 8px; }
+  .ees-included .ees-thumb { grid-row: 2 / span 2; }
+  .ees-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; line-height: 1.5; }
+  .ees-badge-in { background: var(--accent); color: #fff; }
+  .ees-badge-out { background: #F1EFEC; color: var(--ink-soft); border: 1px dashed #BDB8B3; }
+  .ees-panel-head { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+  .ees-out { border-style: dashed; border-color: #CFC9C3; background: #FAF9F7; }
+  .ees-out .ees-agent { border-style: dashed; border-color: #D9D4CE; background: #fff; }
+  .ees-out .ees-agent > *:not(.ees-thumb) { opacity: .78; }
+  .ees-out .ees-thumb { opacity: .55; filter: grayscale(.6); }
+  .ees-agent-title { font-size: 14px; font-weight: 700; color: var(--ink); align-self: end; }
+  .ees-agent-text { font-size: 12.5px; color: var(--ink-mid); line-height: 1.5; align-self: start; }
+  @media (max-width: 640px) {
+    .ees { padding: 22px 18px; }
+    .ees-grid { grid-template-columns: 1fr; }
+    .ees-left::after { display: none; }
+    .ees-agent { grid-template-columns: 1fr; }
+    .ees-agent .ees-thumb { grid-row: auto; height: 64px; }
+  }
+</style>
+</head>
+<body>
+<nav class="topnav" aria-label="Sections">
+  <a href="#s01">Welcome</a>
+  <a href="#s05">Who You Sell To</a>
+  <a href="#s03">Business Context</a>
+  <a href="#s07">Getting Started</a>
+</nav>
+
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-eyebrow">GTM Strategy Brief</div>
+    <h1 class="cover-title">MongoDB + Sense Reply<br><em>Go-to-Market</em><br>Strategy</h1>
+    <p class="cover-sub">A go-to-market intelligence brief powered by Vieu.</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><span class="cover-meta-label">Prepared by</span><span class="cover-meta-value">Vieu</span></div>
+      <div class="cover-meta-item"><span class="cover-meta-label">Prepared for</span><span class="cover-meta-value">MongoDB · Sense Reply</span></div>
+      <div class="cover-meta-item"><span class="cover-meta-label">Version</span><span class="cover-meta-value">November 2026</span></div>
+    </div>
+  </div>
+
+  <!-- 01 WELCOME -->
+  <div class="section" id="s01">
+    <h2 class="section-title">Welcome to your<br><em>AWS BOX Milestone Benefit</em></h2>
+    <p class="section-intro">Vieu is your go-to-market partner for the MongoDB and Sense Reply joint motion. Semantic Kernel runs on MongoDB Atlas and AWS, so the work starts from a shared solution. Vieu finds the right buyers and a warm way in to each of them. Your teams run the outreach.</p>
+
+    <div class="program-banner">
+      <div>
+        <div class="pb-label">The Program</div>
+        <div class="pb-title">Vieu GTM engagement</div>
+        <div class="pb-body">White-glove engagement for Semantic Kernel. MongoDB and Sense Reply are the joint partners, with AWS as the cloud foundation.</div>
+      </div>
+      <div>
+        <div class="pb-label">The Accounts</div>
+        <div class="pb-title">Energy &amp; utilities with heterogeneous data</div>
+        <div class="pb-body">Organizations integrating metering, grid or asset systems against shared standards. Connected-asset industrials are an expansion hypothesis.</div>
+      </div>
+      <div>
+        <div class="pb-label">The Goal</div>
+        <div class="pb-title">Meetings with data and integration leaders</div>
+        <div class="pb-body">Each account starts with a focused proof of concept: one priority source, one target model and one high-value interoperability use case. Targets and timeline to be set together.</div>
+      </div>
+    </div>
+
+    <p class="sub-label" style="margin-bottom:12px;">What You Get</p>
+    <div style="margin-bottom:36px;">
+      <div class="del-row first">
+        <div class="dk"><div class="lab">Deliverable 01</div><div class="val">Market Monitoring</div><div class="when">Ongoing</div></div>
+        <div class="db"><div class="h">Energy and utilities organizations, tracked from a firmographics standpoint</div><div class="p">Continuous monitoring of the organizations that fit your ICP by firmographics, so new and changing target accounts surface as they match.</div></div>
+      </div>
+      <div class="del-row">
+        <div class="dk"><div class="lab">Deliverable 02</div><div class="val">Account Plans</div><div class="when">100 curated account plans</div></div>
+        <div class="db"><div class="h">Full account plans with strategic priorities</div><div class="p">A complete plan for each priority account: corporate sentiment, technographics, opportunities, stakeholders, connections and org chart.</div></div>
+      </div>
+      <div class="del-row">
+        <div class="dk"><div class="lab">Deliverable 03</div><div class="val">People Bank</div><div class="when">1,000 people across ~100 accounts</div></div>
+        <div class="db"><div class="h">Buying committees and influencers, ranked by fit</div><div class="p">All relevant stakeholders per account, enriched with context on their priorities and org chart. They cover enterprise architects, data and governance leads, program sponsors, security stakeholders and influencers. Each person comes with the case for why they fit.</div></div>
+      </div>
+      <div class="del-row last">
+        <div class="dk"><div class="lab">Deliverable 04</div><div class="val">Leads</div><div class="when">Ready to engage</div></div>
+        <div class="db"><div class="h">The best opportunities and people for you to engage</div><div class="p">From the accounts and the People Bank, we find the best opportunities and the best people for you to engage, including the best way to reach them, such as warm paths, events and sequenced outreach.</div></div>
+      </div>
+    </div>
+    <p class="note" style="margin-top:-24px; margin-bottom:36px;">Vieu supplies the intelligence, and your teams own outreach and qualification.</p>
+
+    <div class="ees" style="margin-top:36px;">
+      <div class="ees-label">Vieu · GTM Engagement System</div>
+      <h3 class="ees-title">Vieu has already built the <em>GTM Engagement System</em> for MongoDB + Sense Reply</h3>
+
+      <div class="ees-grid">
+        <div class="ees-left">
+          <div class="ees-card ees-step">
+            <div class="ees-thumb ees-thumb-graph" aria-hidden="true">
+              <svg viewBox="0 0 220 110" width="100%" height="100%">
+                <rect x="12" y="10" width="196" height="90" rx="8" fill="#fff" stroke="#D9CFFF"/>
+                <rect x="24" y="22" width="60" height="8" rx="4" fill="#7744FF" opacity=".7"/>
+                <rect x="92" y="22" width="34" height="8" rx="4" fill="#E2DAFF"/><rect x="132" y="22" width="34" height="8" rx="4" fill="#E2DAFF"/>
+                <circle cx="34" cy="48" r="5" fill="#CFC0FF"/><rect x="46" y="45" width="90" height="6" rx="3" fill="#E2DAFF"/><rect x="150" y="45" width="46" height="6" rx="3" fill="#B9A6FF"/>
+                <circle cx="34" cy="66" r="5" fill="#CFC0FF"/><rect x="46" y="63" width="70" height="6" rx="3" fill="#E2DAFF"/><rect x="150" y="63" width="34" height="6" rx="3" fill="#B9A6FF"/>
+                <circle cx="34" cy="84" r="5" fill="#7744FF"/><rect x="46" y="81" width="100" height="6" rx="3" fill="#E2DAFF"/><rect x="150" y="81" width="40" height="6" rx="3" fill="#7744FF" opacity=".7"/>
+              </svg>
+            </div>
+            <div class="ees-step-title"><span>1.</span> Market Monitoring</div>
+            <p class="ees-step-text">Track the organizations that fit your ICP by firmographics, so new and changing target accounts surface.</p>
+          </div>
+          <div class="ees-card ees-step">
+            <div class="ees-thumb ees-thumb-graph" aria-hidden="true">
+              <svg viewBox="0 0 220 110" width="100%" height="100%">
+                <rect x="10" y="10" width="130" height="90" rx="8" fill="#fff" stroke="#D9CFFF"/>
+                <line x1="75" y1="55" x2="38" y2="30" stroke="#B9A6FF"/><line x1="75" y1="55" x2="112" y2="30" stroke="#B9A6FF"/>
+                <line x1="75" y1="55" x2="38" y2="80" stroke="#B9A6FF"/><line x1="75" y1="55" x2="112" y2="80" stroke="#B9A6FF"/>
+                <circle cx="75" cy="55" r="12" fill="#7744FF"/>
+                <circle cx="38" cy="30" r="8" fill="#CFC0FF"/><circle cx="112" cy="30" r="8" fill="#CFC0FF"/>
+                <circle cx="38" cy="80" r="8" fill="#CFC0FF"/><circle cx="112" cy="80" r="8" fill="#CFC0FF"/>
+                <rect x="150" y="22" width="60" height="66" rx="6" fill="#fff" stroke="#D9CFFF"/>
+                <rect x="158" y="32" width="36" height="5" rx="2" fill="#E2DAFF"/><rect x="158" y="44" width="44" height="5" rx="2" fill="#E2DAFF"/>
+                <rect x="158" y="56" width="30" height="5" rx="2" fill="#E2DAFF"/><rect x="158" y="68" width="40" height="5" rx="2" fill="#7744FF" opacity=".6"/>
+              </svg>
+            </div>
+            <div class="ees-step-title"><span>2.</span> People Bank</div>
+            <p class="ees-step-text">Map all relevant stakeholders across strategic accounts, enriched with their priorities and org chart.</p>
+          </div>
+        </div>
+
+        <div class="ees-right">
+          <div class="ees-agent ees-included">
+            <div class="ees-badge ees-badge-in">&#10003; Included in this offering</div>
+            <div class="ees-thumb" aria-hidden="true">
+              <svg viewBox="0 0 260 64" width="100%" height="100%">
+                <rect x="12" y="8" width="236" height="48" rx="8" fill="#fff" stroke="#7744FF"/>
+                <rect x="24" y="18" width="28" height="28" rx="6" fill="#7744FF" opacity=".75"/>
+                <rect x="62" y="20" width="70" height="5" rx="2" fill="#7744FF" opacity=".7"/><rect x="62" y="32" width="100" height="4" rx="2" fill="#E2DAFF"/><rect x="62" y="41" width="74" height="4" rx="2" fill="#E2DAFF"/>
+                <rect x="196" y="20" width="40" height="24" rx="6" fill="#EDE8FF" stroke="#B9A6FF"/>
+              </svg>
+            </div>
+            <div class="ees-agent-title"><span>3.</span> Account Planning Agent</div>
+            <p class="ees-agent-text">Turns stakeholder intelligence into an account plan with a clear next move.</p>
+          </div>
+
+          <div class="ees-panel ees-out">
+            <div class="ees-panel-head">
+              <div class="ees-panel-title">Agents to Engage Key Stakeholders</div>
+              <div class="ees-badge ees-badge-out">Out of scope &middot; available add-ons in AWS Marketplace</div>
+            </div>
+
+            <div class="ees-agent">
+              <div class="ees-thumb" aria-hidden="true">
+                <svg viewBox="0 0 260 64" width="100%" height="100%">
+                  <circle cx="44" cy="32" r="20" fill="none" stroke="#E2DAFF" stroke-width="8"/>
+                  <circle cx="44" cy="32" r="20" fill="none" stroke="#7744FF" stroke-width="8" stroke-dasharray="95 126" transform="rotate(-90 44 32)"/>
+                  <rect x="86" y="14" width="150" height="6" rx="3" fill="#CFC0FF"/><rect x="86" y="28" width="112" height="6" rx="3" fill="#B9A6FF"/><rect x="86" y="42" width="130" height="6" rx="3" fill="#E2DAFF"/>
+                </svg>
+              </div>
+              <div class="ees-agent-title"><span>4.1</span> Executive Health Agent</div>
+              <p class="ees-agent-text">Baselines executive relationship health and coverage across strategic accounts.</p>
+            </div>
+
+            <div class="ees-agent">
+              <div class="ees-thumb" aria-hidden="true">
+                <svg viewBox="0 0 260 64" width="100%" height="100%">
+                  <rect x="12" y="8" width="150" height="48" rx="8" fill="#fff" stroke="#D9CFFF"/>
+                  <rect x="22" y="16" width="40" height="5" rx="2" fill="#7744FF" opacity=".7"/>
+                  <rect x="22" y="28" width="90" height="5" rx="2" fill="#E2DAFF"/><rect x="22" y="40" width="64" height="5" rx="2" fill="#E2DAFF"/>
+                  <rect x="176" y="8" width="72" height="48" rx="8" fill="#fff" stroke="#D9CFFF"/>
+                  <circle cx="194" cy="26" r="7" fill="#CFC0FF"/><rect x="206" y="22" width="34" height="4" rx="2" fill="#CFC0FF"/><rect x="206" y="31" width="24" height="3" rx="1.5" fill="#E2DAFF"/>
+                </svg>
+              </div>
+              <div class="ees-agent-title"><span>4.2</span> Event Agent</div>
+              <p class="ees-agent-text">Surfaces upcoming events and which target executives will be there.</p>
+            </div>
+
+            <div class="ees-agent">
+              <div class="ees-thumb" aria-hidden="true">
+                <svg viewBox="0 0 260 64" width="100%" height="100%">
+                  <circle cx="30" cy="32" r="12" fill="#CFC0FF"/><rect x="48" y="26" width="46" height="5" rx="2" fill="#CFC0FF"/><rect x="48" y="36" width="30" height="4" rx="2" fill="#E2DAFF"/>
+                  <rect x="120" y="6" width="130" height="52" rx="8" fill="#fff" stroke="#D9CFFF"/>
+                  <rect x="130" y="14" width="44" height="5" rx="2" fill="#7744FF" opacity=".7"/>
+                  <rect x="132" y="26" width="26" height="26" rx="5" fill="#E2DAFF"/><rect x="166" y="26" width="26" height="26" rx="5" fill="#EFEAFF"/><rect x="200" y="26" width="26" height="26" rx="5" fill="#E2DAFF"/>
+                </svg>
+              </div>
+              <div class="ees-agent-title"><span>4.3</span> Nurture Agent</div>
+              <p class="ees-agent-text">Keeps key relationships warm with thoughtful, personalized touchpoints.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 WHO YOU SELL TO -->
+  <div class="section" id="s05">
+    <h2 class="section-title">Who You Sell To</h2>
+    <p class="section-intro">One core segment, with an adjacent segment to test. The personas and signals draw on Sense Reply's published Semantic Kernel offering and MongoDB's customer profile. Suggested tiers, signals and qualification rules are practical recommendations, not published targeting criteria from either company. Please keep, remove or add.</p>
+
+    <div class="segment">
+      <div class="segment-head">
+        <span class="segment-kicker">Target Segment</span>
+        <span class="segment-title">Energy &amp; utilities organizations with heterogeneous data systems</span>
+      </div>
+      <div class="card-body">Utilities and energy organizations that manage relational, NoSQL and file-based systems while aligning with evolving standards such as CIM, IEC 61850, DLMS/COSEM and NGSI-LD. EU rules add data-sharing and interoperability requirements, including the Data Act (Regulation (EU) 2023/2854, applicable since 12 September 2025) and Commission Implementing Regulation (EU) 2023/1162 on access to electricity metering and consumption data. Lead with the application and its data problem, and qualify the specific workload rather than assuming complexity requires MongoDB. Geography is still to confirm, since the strongest documented driver is EU regulation.</div>
+
+      <div class="sub-label">Target industries</div>
+      <div class="tag-group">
+        <span class="tag tier2">Energy &amp; utilities · core</span>
+        <span class="tag">Renewables · solar and wind plants</span>
+        <span class="tag">E-mobility · EV charging and fleets</span>
+        <span class="tag ask">Other connected-asset industrials · expansion hypothesis</span>
+      </div>
+
+      <div class="fast-lane"><b>Fastest way in</b> A utility integrating new metering, grid or asset systems and struggling to map proprietary schemas to industry models, with a named owner and a delivery date.</div>
+
+      <div class="sub-label">Two ways in</div>
+      <div class="two-col" style="margin-top:12px;">
+        <div>
+          <div class="card-eyebrow">Entry 01 · Standards-led</div>
+          <div style="font-family:var(--serif); font-size:16px; color:var(--ink); line-height:1.25; margin-bottom:8px;">Mapping to industry models is manual and slow</div>
+          <div class="card-body">Proprietary schemas must be mapped to shared models, and the work leans on manual schema analysis, scarce domain experts and repeated mapping. The pitch: AI-assisted mappings that domain experts approve, with lineage and versioning.</div>
+          <div class="sub-label">Champions · start here</div>
+          <div class="tag-group">
+            <span class="tag tier1">Enterprise Architect</span>
+            <span class="tag tier1">Data Engineer</span>
+            <span class="tag tier1">Data Governance Lead</span>
+            <span class="tag tier1">Integration Architect</span>
+          </div>
+          <div class="sub-label">Sponsors · not the first call</div>
+          <div class="tag-group">
+            <span class="tag tier2">CIO</span>
+            <span class="tag tier2">CDO</span>
+            <span class="tag tier2">Utility Data / Platform Leader</span>
+          </div>
+        </div>
+        <div>
+          <div class="card-eyebrow">Entry 02 · Program-led</div>
+          <div style="font-family:var(--serif); font-size:16px; color:var(--ink); line-height:1.25; margin-bottom:8px;">A modernization program is stuck on definitions</div>
+          <div class="card-body">A grid modernization, smart-metering, digital-twin or API initiative is delayed by inconsistent definitions and repeated manual integration work. The pitch: approved mappings, validation and reusable integration artifacts, not just moving data.</div>
+          <div class="sub-label">Champions · start here</div>
+          <div class="tag-group">
+            <span class="tag tier1">Grid Modernization Program Lead</span>
+            <span class="tag tier1">Smart Metering Program Lead</span>
+            <span class="tag tier1">Digital Twin Program Lead</span>
+            <span class="tag tier1">API / Integration Lead</span>
+          </div>
+          <div class="sub-label">Sponsors · not the first call</div>
+          <div class="tag-group">
+            <span class="tag tier2">CIO</span>
+            <span class="tag tier2">CDO</span>
+            <span class="tag tier2">Security stakeholder</span>
+            <span class="tag tier2">OT stakeholder</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-label" style="margin-top:22px;">The four buying roles · to validate</div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Role group</th><th>Role in the deal</th><th>Titles to focus on</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Architects, data engineers, governance teams</strong></td><td>Technical evaluator and champion. Named users of the solution</td><td>Enterprise Architect · Data Engineer · Data Governance Lead</td></tr>
+            <tr><td><strong>Utility data and platform leaders</strong></td><td>Owner of cross-system implementation and reusable data services (inferred)</td><td>Data Platform Lead · Integration Architect</td></tr>
+            <tr><td><strong>Program leaders</strong></td><td>Business sponsor where the initiative supports their program (inferred)</td><td>Grid Modernization · Metering · Digital Twin</td></tr>
+            <tr><td><strong>CIO / CDO and security / OT</strong></td><td>Potential budget and risk approver. Validate authority and the IT/OT boundary</td><td>CIO · CDO · Security · OT</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Suggested outreach order: the application owner and architect first to establish workload fit, then the platform or database team to validate deployment and operations, then the budget owner and approval process. Bring security in early for regulated or sensitive workloads. A developer champion helps, but does not establish budget authority.</p>
+
+      <div class="sub-label">Fit signals</div>
+      <div class="tag-group">
+        <span class="tag tier2">Funded project with a deadline</span>
+        <span class="tag tier2">Named application owner</span>
+        <span class="tag tier2">Documented pain in the current data layer</span>
+        <span class="tag tier2">Prototype moving to production</span>
+        <span class="tag tier2">Existing MongoDB footprint plus a change</span>
+        <span class="tag tier2">Heterogeneous source systems</span>
+        <span class="tag tier2">Mapping to CIM, IEC 61850, DLMS/COSEM or NGSI-LD</span>
+        <span class="tag tier2">AWS-aligned architecture</span>
+        <span class="tag tier2">Domain experts available for validation</span>
+        <span class="tag tier2">Focused proof-of-concept scope</span>
+        <span class="tag tier2">Digital-twin or API initiative stalled</span>
+      </div>
+
+      <div class="sub-label" style="color:var(--red);">Anti-signals</div>
+      <div class="tag-group">
+        <span class="tag anti">AI announcement with no application</span>
+        <span class="tag anti">Database keywords with no project</span>
+        <span class="tag anti">Stable systems with no change driver</span>
+        <span class="tag anti">Warehouse or BI-only workload</span>
+        <span class="tag anti">Generic "digital transformation" slogan</span>
+        <span class="tag anti">A single job posting · investigate, don't assume</span>
+      </div>
+
+      <div class="fast-lane" style="margin-top:22px;"><b>Pursue now</b> A suitable application, a specific problem, an accountable owner and a decision or delivery date. Confirmed funding or a procurement path strengthens it.</div>
+    </div>
+
+    <p class="sub-label" style="margin-top:36px; margin-bottom:12px;">Key GTM Questions</p>
+    <div class="cards" style="margin-top:0; margin-bottom:0;">
+      <div class="card accent-top">
+        <div class="card-eyebrow">Question 01</div>
+        <div class="card-title" style="font-size:16px;">What's working well now?</div>
+        <div class="card-body">Where Semantic Kernel and MongoDB Atlas already win, so we can find more utilities that look like them.</div>
+      </div>
+      <div class="card accent-top">
+        <div class="card-eyebrow">Question 02</div>
+        <div class="card-title" style="font-size:16px;">What are the challenges?</div>
+        <div class="card-body">Where deals slow down, for example source onboarding, scarce domain experts or mapping approvals, so outreach can aim at the friction.</div>
+      </div>
+      <div class="card accent-top">
+        <div class="card-eyebrow">Question 03</div>
+        <div class="card-title" style="font-size:16px;">How does co-selling work?</div>
+        <div class="card-body">How MongoDB, Sense Reply and AWS sellers split accounts and hand off. Public sources show joint solutions and Marketplace listings, but not shared account lists or co-sell rules.</div>
+      </div>
+      <div class="card accent-top">
+        <div class="card-eyebrow">Question 04</div>
+        <div class="card-title" style="font-size:16px;">Do you leverage your joint networks today?</div>
+        <div class="card-body">Relationships that MongoDB, Sense Reply and AWS teams share with utility data, integration and program leaders, and could use to open doors.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 UNDERSTANDING YOUR BUSINESS -->
+  <div class="section" id="s03">
+    <div class="section-kicker">Business Context</div>
+    <h2 class="section-title">Our Understanding of Your Business</h2>
+    <p class="section-intro">Utilities don't need another data lake. They need to connect heterogeneous systems to shared models without disrupting the systems that run the grid. EU requirements for data sovereignty and interoperability are exposing gaps in legacy systems' ability to support shared data models, and traditional alignment still relies on manual schema analysis, scarce domain expertise and repeated mapping. Semantic Kernel is built for that gap: AI-assisted semantic governance that keeps domain experts in control of validation and approval.</p>
+
+    <div class="stat-strip">
+      <div class="stat-cell"><div class="stat-num">12 Sep 2025</div><div class="stat-label">Date the EU Data Act (Regulation (EU) 2023/2854) became applicable, adding data-sharing and interoperability requirements<sup>1</sup></div></div>
+      <div class="stat-cell"><div class="stat-num">4</div><div class="stat-label">standards named in the Semantic Kernel brief: CIM, IEC 61850, DLMS/COSEM and NGSI-LD<sup>1</sup></div></div>
+      <div class="stat-cell"><div class="stat-num">2</div><div class="stat-label">joint accelerators listed on AWS Marketplace, for e-mobility and renewables, both designated for Private Offers<sup>3</sup></div></div>
+    </div>
+
+    <div class="pull-quote">
+      <p>"Lead with the utility modernization program and its interoperability bottleneck, not a generic AI pitch."</p>
+      <cite>Vieu Account Intelligence · MongoDB + Sense Reply</cite>
+    </div>
+    <p class="note"><sup>1</sup> Sense Reply, <em>Semantic Kernel</em> solution brief, including the Data Act and Commission Implementing Regulation (EU) 2023/1162 on access to electricity metering and consumption data. <sup>2</sup> Reply announcement of 26 June 2025: MongoDB named Reply its Top Partner of the Year 2025 for Italy. <sup>3</sup> AWS Marketplace listings for the Sense Reply <a href="https://aws.amazon.com/marketplace/pp/prodview-5iiiqt47yu2y4" target="_blank" rel="noopener">E-Mobility Accelerator</a> and <a href="https://aws.amazon.com/marketplace/pp/prodview-ijoaxfroz7fqq" target="_blank" rel="noopener">Renewables Accelerator</a>.</p>
+
+    <div class="cards" style="margin-bottom: 28px;">
+      <div class="card accent-top">
+        <div class="card-eyebrow">MongoDB · The data platform</div>
+        <div class="card-title">Document-database platform for modern applications</div>
+        <div class="card-body">MongoDB serves organizations of all sizes, with its key sales focus on enterprises investing heavily in software application development and deployment. Community and self-service adoption can become an entry point for commercial expansion. Atlas is the managed-cloud route, and Enterprise Advanced is the self-managed route for on-premises or controlled environments. Dedicated industry positioning spans financial services, retail, manufacturing and mobility, healthcare, insurance, telecom, public sector and media.<sup>4</sup></div>
+      </div>
+      <div class="card accent-top">
+        <div class="card-eyebrow">Sense Reply · The solution builder</div>
+        <div class="card-title">Energy &amp; utilities data expertise on AWS and MongoDB</div>
+        <div class="card-body">Sense Reply is part of Reply Group, an AWS Premier Consulting Partner. MongoDB named Reply its <strong>Top Partner of the Year 2025 for Italy</strong>, with Sense Reply among the contributing Reply companies.<sup>2</sup> Sense Reply designs and deploys managed cloud infrastructure that uses MongoDB Atlas as the scalable document-database layer for IoT and real-time data. Its Semantic Kernel offering is the focus here.</div>
+      </div>
+    </div>
+
+    <div class="offer-box">
+      <div class="offer-label">Semantic Kernel · The offer</div>
+      <p style="font-size:13px; color:var(--ink-mid); line-height:1.7;">A <strong>design-time governance platform</strong> that combines technical metadata, business knowledge and selected target models. AI-assisted workflows discover source structures, run semantic interviews and propose governed mappings and transformation logic, while <strong>domain experts keep validation and approval control</strong>. The platform creates reusable libraries or microservice packages with tests, documentation, versioning and source-to-target traceability. Organizations standardize data without replacing the internal models their operations depend on.</p>
+
+      <div class="agents">
+        <div class="agent"><b>Agent Service</b><span>Analyzes source metadata and uses Amazon Bedrock for semantic reasoning and mapping generation</span></div>
+        <div class="agent"><b>Mapping Service</b><span>Validates generated transformation code and packages a library or microservice</span></div>
+        <div class="agent"><b>MongoDB Atlas</b><span>Metadata, semantic knowledge, governance, lineage and versioning backbone</span></div>
+        <div class="agent"><b>Amazon EKS + S3</b><span>EKS runs the platform services. S3 stores packages, tests and documentation</span></div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="mini-head">How it fits together</div>
+          <ul class="check-list">
+            <li><strong>Sense Reply</strong> brings the Energy &amp; Utilities expertise and delivers Semantic Kernel</li>
+            <li><strong>MongoDB Atlas</strong> is the knowledge, metadata and governance backbone</li>
+            <li><strong>AWS</strong> supplies Amazon Bedrock, Amazon EKS and Amazon S3, and is the shared cloud foundation</li>
+          </ul>
+        </div>
+        <div>
+          <div class="mini-head">The opportunity in one sentence</div>
+          <p style="font-size:13px; color:var(--ink-mid); line-height:1.7;">Semantic Kernel turns complex source schemas into governed, reusable integration assets without replacing operational systems. Vieu supplies the data, integration and program leaders who feel that pain, and a warm way in to each.</p>
+          <div class="mini-head" style="margin-top:16px;">Start → expand</div>
+          <p style="font-size:13px; color:var(--ink-mid); line-height:1.7;">Start with a focused proof of concept: one priority source, one target model and one high-value interoperability use case. Then bring in more sources and model versions, reusing the approved mappings.</p>
+        </div>
+      </div>
+
+      <div class="outcome-strip" style="grid-template-columns: repeat(4, 1fr);" aria-label="KPIs to evaluate from the Semantic Kernel brief">
+        <div class="outcome"><div class="n">Onboarding</div><div class="l">Median days</div></div>
+        <div class="outcome"><div class="n">First pass</div><div class="l">Approved without rework ÷ reviewed</div></div>
+        <div class="outcome"><div class="n">Asset reuse</div><div class="l">Projects reusing assets ÷ total projects</div></div>
+        <div class="outcome"><div class="n">Governance</div><div class="l">Fully controlled ÷ production mappings</div></div>
+      </div>
+    </div>
+
+    <div class="offer-box" style="margin-top:20px;">
+      <div class="offer-label">Also on AWS Marketplace · Sense Reply accelerators with MongoDB</div>
+      <div class="two-col">
+        <div>
+          <div class="mini-head">E-Mobility Accelerator</div>
+          <p style="font-size:13px; color:var(--ink-mid); line-height:1.7;">Manages large-scale EV charging stations and fleets. MongoDB works with AWS IoT Core, Kafka and Lambda to handle real-time charging telemetry and scale with station traffic.</p>
+        </div>
+        <div>
+          <div class="mini-head">Renewables Accelerator (RIPA)</div>
+          <p style="font-size:13px; color:var(--ink-mid); line-height:1.7;">A platform blueprint for managed solar or wind plants. It processes real-time time-series data from IoT devices and edge machinery and stores it in MongoDB without restrictive relational schemas.</p>
+        </div>
+      </div>
+      <p class="note">Both listings are designated for AWS Private Offers. Public sources do not show shared account lists, commercial co-sell rules, exclusivity or a Sense Reply-specific MongoDB partner tier. "Semantic Kernel" here is Sense Reply's offering, not Microsoft's Semantic Kernel SDK.</p>
+    </div>
+    <p class="note"><sup>4</sup> MongoDB annual filing, industries and deployment-options pages. Suggested priorities in this brief are Vieu's recommendations, not MongoDB's published targeting criteria.</p>
+  </div>
+
+  <!-- 07 WHAT WE NEED -->
+  <div class="section" id="s07">
+    <div class="section-kicker">Getting Started</div>
+    <h2 class="section-title">What We Need From You</h2>
+    <p class="section-intro">The target account list unblocks the first cohort.</p>
+
+    <div class="table-wrap" style="margin-bottom:36px;">
+      <table class="data-table">
+        <thead><tr><th>What we need</th><th>From</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Target account list and suppression list</strong>: the energy and utilities accounts to focus on, plus existing customers, open opportunities and partner-owned accounts to exclude</td><td>MongoDB + Sense Reply</td><td><span class="pend">Pending.</span> The starting input for the first cohort</td></tr>
+          <tr><td><strong>Joint network review</strong>: the relationships both teams already hold</td><td>MongoDB + Sense Reply</td><td><span class="pend">Pending.</span> Mark keep, remove or add</td></tr>
+          <tr><td><strong>LinkedIn CSVs</strong> from introducers</td><td>Each introducer</td><td><span class="pend">Pending.</span> More warm paths, and warmer ones</td></tr>
+          <tr><td><strong>Delivery channel</strong>: Slack, Teams, Google Drive or email, plus Vieu logins</td><td>MongoDB + Sense Reply</td><td><span class="pend">Decide in the working session</span></td></tr>
+          <tr><td><strong>CRM integration</strong>: Salesforce or HubSpot</td><td>MongoDB / Sense Reply</td><td>Optional</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mini-head" style="margin-top:36px; margin-bottom:16px;">Important Links</div>
+    <div class="links-box">
+      <div class="link-row">
+        <div class="link-name">Vieu Platform Login</div>
+        <div class="link-desc">Access your account, run searches, and activate warm paths</div>
+        <a class="btn-outline" href="https://www.vieu.com/login" target="_blank" rel="noopener">Log In &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    <div class="footer-left">
+      <strong>MongoDB + Sense Reply GTM Strategy Brief</strong><br>
+      Prepared by Vieu · November 2026 · Confidential<br>
+      Built on 9B Executive Relationships
+    </div>
+    <div class="footer-vieu">vieu</div>
+  </div>
+
+</div>
+
+<script>
+/* Live-edit mode for working sessions.
+   Open this file with #edit at the end of the URL to type names into the
+   dashed fields, then use "Save updated HTML" to download the filled-in copy. */
+(function () {
+  var STORE = 'vieu-mdb-sr-brief';
+  var fills = Array.prototype.slice.call(document.querySelectorAll('.fill[data-key]'));
+
+  function readStore() { try { return JSON.parse(localStorage.getItem(STORE) || '{}'); } catch (e) { return {}; } }
+  function writeStore(obj) { try { localStorage.setItem(STORE, JSON.stringify(obj)); } catch (e) {} }
+
+  if (location.hash !== '#edit') return;
+
+  document.body.classList.add('editing');
+  var saved = readStore();
+  fills.forEach(function (el) {
+    var k = el.getAttribute('data-key');
+    if (saved[k] !== undefined) { el.textContent = saved[k]; el.classList.remove('pending'); }
+    el.setAttribute('contenteditable', 'true');
+    el.setAttribute('spellcheck', 'false');
+    el.addEventListener('focus', function () {
+      if (el.classList.contains('pending')) {
+        var r = document.createRange(); r.selectNodeContents(el);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      }
+    });
+    el.addEventListener('input', function () {
+      el.classList.remove('pending');
+      var all = readStore(); all[k] = el.textContent.trim(); writeStore(all);
+    });
+    el.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
+  });
+
+  var bar = document.createElement('div');
+  bar.id = 'edit-bar';
+  bar.innerHTML = '<span>Edit mode · click a dashed field to type</span>' +
+    '<button type="button" id="eb-save">Save updated HTML</button>' +
+    '<button type="button" class="ghost" id="eb-reset">Reset fields</button>';
+  document.body.appendChild(bar);
+
+  document.getElementById('eb-save').addEventListener('click', function () {
+    var clone = document.documentElement.cloneNode(true);
+    var b = clone.querySelector('#edit-bar'); if (b) b.parentNode.removeChild(b);
+    clone.querySelector('body').classList.remove('editing');
+    Array.prototype.forEach.call(clone.querySelectorAll('[contenteditable]'), function (n) {
+      n.removeAttribute('contenteditable'); n.removeAttribute('spellcheck');
+    });
+    var html = '<!DOCTYPE html>\n' + clone.outerHTML;
+    var blob = new Blob([html], { type: 'text/html' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'MongoDB_SenseReply_GTM_Brief.html';
+    document.body.appendChild(a); a.click(); a.parentNode.removeChild(a);
+  });
+
+  document.getElementById('eb-reset').addEventListener('click', function () {
+    try { localStorage.removeItem(STORE); } catch (e) {}
+    location.reload();
+  });
+})();
+</script>
+</body>
+</html>
